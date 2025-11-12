@@ -43,5 +43,100 @@ class QRScannerScreen extends
   const QRScannerScreen({super.key});
 
   @override
-  State<QRScannerScreen>
+  State<QRScannerScreen> createState() => 
+    _QRScannerScreenState();
+}
+
+class _QRScannerScreenState extends State<QRScannerScreen> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? controller;
+  String result = 'Scan a QR code';
+
+  @override
+  void initState() {
+    super.initState();
+    _requestCameraPermission();
+  }
+
+  Future<void>
+    _requestCameraPermission() async {
+    var status = await
+      Permission.camera.request();
+    if (status.isDenied) {
+      //Handle denial, e.g., show a dialog
+      ScaffoldMessenger.of(context).show
+        SnackBar(
+        const SnackBar(content: Text('Camera permission is required')),
+        );
+    }
+  }
+
+  @override
+  void dispose() {
+    cobtroller?.dispose();
+    super.dispose();
+  }
+
+  void
+    _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedData
+      Stream.listen((scanData)
+                    {
+                      setState(() {
+                        result = scanData.code ?? 'No data';
+                      });
+                      //Optionally pause scanning after a result
+                      controller.pauseCamera();
+                    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('QR Code Scanner')),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 5,
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+                borderColor: Colors.red,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 10,
+                cutOutSize: 300,
+                ),
+              ),
+            ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Text(
+                result,
+                style: const TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ElevatedButton(
+            onPressed: () {
+              controller?.resumeCamera();
+              setState(() {
+                result = 'Scan a QR code';
+              });
+            },
+            child: const Text('Scan Again'),
+            ),
+          ],
+        ),
+      );
+  }
+}
+//Connect device
+//Run 'flutter run' in terminal
+//Scan a QR code
+  
     
