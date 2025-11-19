@@ -62,3 +62,31 @@ class _TodoHomePageState extends State<TodoHomePage> {
       _todas.removeAt(index);
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Todo App"),
+        centerTitle: true,
+        ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0), 
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      labelText: "Add a task",
+                      border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: _addTodo,
+                  child: const Text("Add"),
+                  )
