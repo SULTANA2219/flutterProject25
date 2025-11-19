@@ -90,3 +90,46 @@ class _TodoHomePageState extends State<TodoHomePage> {
                   onPressed: _addTodo,
                   child: const Text("Add"),
                   )
+                ],
+              ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: _todos.isEmpty
+              ? const Center(
+                child: Text(
+                  "No tasks yet",
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                )
+              :ListView.builder(
+                itemCount: _todos.length,
+                itemBuilder: (context. index) {
+                  final todo = todos[index];
+                  return Card(
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: todo['done'],
+                        onChanged: (_) => _toggleDone(index),
+                        ),
+                      title: Text(
+                        todo['title'],
+                        style: TextStyle(
+                          decoration: todo['done'] ? TextDecoration.lineThrough : TextDecoration.none,
+                          color: todo['done'] ? Colors.grey : Colors.black,
+                          ),
+                        ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red), 
+                        onPressed: () => _removeTodo(index),
+                        ),
+                      ),
+                    );
+                },
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+  }
+}
