@@ -110,5 +110,71 @@ Future<void> _openCheckout() async {
       },
     //'order_id':
     'order_DBJOWzybf0sJbb', //optional — use when you create order server-side
+    'notes': {
+      'order_id': '12345',
+      'customer_id': 'cust_001'
+      },
+    'theme': {'color': '#4B0082'}
+  };
+
+  try {
+    _razorpay.open(options);
+  } catch (e) {
+    debugPrint('Error: $e');
+  }
+}
+
+void _showAlert(String title, String body) {
+  showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: [
+        TextButton(
+          onPressed: () =>
+          Navigator.of(context).pop(),
+          child: const Text('OK'),
+          )
+        ],
+      ),
+    );
+}
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text('Razorpay Payment Example')),
+    body: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text("Tap below to start a Razorpay checkout (Test mode)'),
+          const SizedBox(height:16),
+          ElevatedButton.icon(
+          icon: const Icon(Icons.payment),
+          label: const Text('Pay INR 500'),
+          onPressed: _openCheckout,
+          ),
+          const SizedBox(height: 24),
+          const Text('Status', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          SelectableText(_status),
+          const SizedBox(height: 24),
+          const Text('Notes', style: TextStyle(fontWeight: FontWeight bold)),
+          const SizedBox(height: 8),
+          const Text('• This demo passes a test key from the client. For secure verification, use server-side orders and verify webhooks or signatures.'),
+          const SizedBox(height: 8),
+          const Text('• Replace the _testKey variable with your Razorpay test key before running.'),
+          ],
+          ),
+          ),
+          );
+          }
+          }
+
+          
+    
     
   
